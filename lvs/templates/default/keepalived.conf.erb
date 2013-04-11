@@ -1,0 +1,300 @@
+vrrp_instance VI {
+  state BACKUP
+  interface <%= node['lvs_vrrp_interface'] %>
+  garp_master_delay 5
+  virtual_router_id 1
+  priority <%= (@node_ip & @lvs_active_rip).empty? ? 100 : 101 %>
+  nopreempt
+  advert_int 1
+  authentication {
+    auth_type PASS
+    auth_pass anypassword
+  }
+
+  virtual_ipaddress {
+    <%= node['lvs_vrrp_address'] %>/24 dev <%= node['lvs_vrrp_interface'] %>
+  }
+}
+<% game_db1 = node['lvs_game_db1_master_vip'] + node['lvs_game_db1_slave_vip'] %>
+<% unless game_db1.empty? then %>
+
+################game-db1###########################
+<% unless node['lvs_game_db1_master_vip'].empty? then %>
+virtual_server_group db1_master {
+  <%= node['lvs_game_db1_master_vip'] %> 3306
+}
+
+virtual_server group db1_master {
+  delay_loop  3
+  lvs_sched   lc
+  lvs_method  DR
+  protocol TCP
+
+  real_server <%= node['lvs_game_db1_master_rip'] %> 3306 {
+    weight 1
+    inhibit_on_failure
+  }
+}
+<% end %>
+
+<% unless node['lvs_game_db1_slave_vip'].empty? then %>
+
+virtual_server_group db1_slave {
+  <%= node['lvs_game_db1_slave_vip'] %> 3306
+}
+
+virtual_server group db1_slave {
+  delay_loop  3
+  lvs_sched   lc
+  lvs_method  DR
+  protocol TCP
+
+<% node['lvs_game_db1_slave_rip'].split(/\s*,\s*/).each do |rip| %>
+  real_server <%= rip %> 3306 {
+    weight 1
+    inhibit_on_failure
+
+    MISC_CHECK  {
+      misc_path     "/usr/lib64/nagios/plugins/check_mysql -H <%= rip %> -u root -p '<%= node['lvs_mysql_root_password'] %>' -S -w 30"
+      misc_timeout  3
+    }
+  }
+<% end %>
+}
+<% end %>
+<% end %>
+<% user_db2 = node['lvs_user_db2_master_vip'] + node['lvs_user_db2_slave_vip'] %>
+<% unless user_db2.empty? then %>
+
+################user-db2###########################
+<% unless node['lvs_user_db2_master_vip'].empty? then %>
+virtual_server_group db2_master {
+  <%= node['lvs_user_db2_master_vip'] %> 3306
+}
+
+virtual_server group db2_master {
+  delay_loop  3
+  lvs_sched   lc
+  lvs_method  DR
+  protocol TCP
+
+  real_server <%= node['lvs_user_db2_master_rip'] %> 3306 {
+    weight 1
+    inhibit_on_failure
+  }
+}
+<% end %>
+<% unless node['lvs_user_db2_slave_vip'].empty? then %>
+
+virtual_server_group db2_slave {
+  <%= node['lvs_user_db2_slave_vip'] %> 3306
+}
+
+virtual_server group db2_slave {
+  delay_loop  3
+  lvs_sched   lc
+  lvs_method  DR
+  protocol TCP
+
+<% node['lvs_user_db2_slave_rip'].split(/\s*,\s*/).each do |rip| %>
+  real_server <%= rip %> 3306 {
+    weight 1
+    inhibit_on_failure
+
+    MISC_CHECK  {
+      misc_path     "/usr/lib64/nagios/plugins/check_mysql -H <%= rip %> -u root -p '<%= node['lvs_mysql_root_password'] %>' -S -w 30"
+      misc_timeout  3
+    }
+  }
+<% end %>
+}
+<% end %>
+<% end %>
+<% user_db3 = node['lvs_user_db3_master_vip'] + node['lvs_user_db3_slave_vip'] %>
+<% unless user_db3.empty? then %>
+
+################user-db3###########################
+<% unless node['lvs_user_db3_master_vip'].empty? then %>
+virtual_server_group db3_master {
+  <%= node['lvs_user_db3_master_vip'] %> 3306
+}
+
+virtual_server group db3_master {
+  delay_loop  3
+  lvs_sched   lc
+  lvs_method  DR
+  protocol TCP
+
+  real_server <%= node['lvs_user_db3_master_rip'] %> 3306 {
+    weight 1
+    inhibit_on_failure
+  }
+}
+<% end %>
+<% unless node['lvs_user_db3_slave_vip'].empty? then %>
+
+virtual_server_group db3_slave {
+  <%= node['lvs_user_db3_slave_vip'] %> 3306
+}
+
+virtual_server group db3_slave {
+  delay_loop  3
+  lvs_sched   lc
+  lvs_method  DR
+  protocol TCP
+
+<% node['lvs_user_db3_slave_rip'].split(/\s*,\s*/).each do |rip| %>
+  real_server <%= rip %> 3306 {
+    weight 1
+    inhibit_on_failure
+
+    MISC_CHECK  {
+      misc_path     "/usr/lib64/nagios/plugins/check_mysql -H <%= rip %> -u root -p '<%= node['lvs_mysql_root_password'] %>' -S -w 30"
+      misc_timeout  3
+    }
+  }
+<% end %>
+}
+<% end %>
+<% end %>
+<% user_db4 = node['lvs_user_db4_master_vip'] + node['lvs_user_db4_slave_vip'] %>
+<% unless user_db4.empty? then %>
+
+################user-db4###########################
+<% unless node['lvs_user_db4_master_vip'].empty? then %>
+virtual_server_group db4_master {
+  <%= node['lvs_user_db4_master_vip'] %> 3306
+}
+
+virtual_server group db4_master {
+  delay_loop  3
+  lvs_sched   lc
+  lvs_method  DR
+  protocol TCP
+
+  real_server <%= node['lvs_user_db4_master_rip'] %> 3306 {
+    weight 1
+    inhibit_on_failure
+  }
+}
+<% end %>
+<% unless node['lvs_user_db4_slave_vip'].empty? then %>
+
+virtual_server_group db4_slave {
+  <%= node['lvs_user_db4_slave_vip'] %> 3306
+}
+
+virtual_server group db4_slave {
+  delay_loop  3
+  lvs_sched   lc
+  lvs_method  DR
+  protocol TCP
+
+<% node['lvs_user_db4_slave_rip'].split(/\s*,\s*/).each do |rip| %>
+  real_server <%= rip %> 3306 {
+    weight 1
+    inhibit_on_failure
+
+    MISC_CHECK  {
+      misc_path     "/usr/lib64/nagios/plugins/check_mysql -H <%= rip %> -u root -p '<%= node['lvs_mysql_root_password'] %>' -S -w 30"
+      misc_timeout  3
+    }
+  }
+<% end %>
+}
+<% end %>
+<% end %>
+<% user_db5 = node['lvs_user_db5_master_vip'] + node['lvs_user_db5_slave_vip'] %>
+<% unless user_db5.empty? then %>
+
+################user-db5###########################
+<% unless node['lvs_user_db5_master_vip'].empty? then %>
+virtual_server_group db5_master {
+  <%= node['lvs_user_db5_master_vip'] %> 3306
+}
+
+virtual_server group db5_master {
+  delay_loop  3
+  lvs_sched   lc
+  lvs_method  DR
+  protocol TCP
+
+  real_server <%= node['lvs_user_db5_master_rip'] %> 3306 {
+    weight 1
+    inhibit_on_failure
+  }
+}
+<% end %>
+<% unless node['lvs_user_db5_slave_vip'].empty? then %>
+
+virtual_server_group db5_slave {
+  <%= node['lvs_user_db5_slave_vip'] %> 3306
+}
+
+virtual_server group db5_slave {
+  delay_loop  3
+  lvs_sched   lc
+  lvs_method  DR
+  protocol TCP
+
+<% node['lvs_user_db5_slave_rip'].split(/\s*,\s*/).each do |rip| %>
+  real_server <%= rip %> 3306 {
+    weight 1
+    inhibit_on_failure
+
+    MISC_CHECK  {
+      misc_path     "/usr/lib64/nagios/plugins/check_mysql -H <%= rip %> -u root -p '<%= node['lvs_mysql_root_password'] %>' -S -w 30"
+      misc_timeout  3
+    }
+  }
+<% end %>
+}
+<% end %>
+<% end %>
+<% logging_db6 = node['lvs_logging_db6_master_vip'] + node['lvs_logging_db6_slave_vip'] %>
+<% unless logging_db6.empty? then %>
+
+################logging-db6###########################
+<% unless node['lvs_logging_db6_master_vip'].empty? then %>
+virtual_server_group db6_master {
+  <%= node['lvs_logging_db6_master_vip'] %> 3306
+}
+
+virtual_server group db6_master {
+  delay_loop  3
+  lvs_sched   lc
+  lvs_method  DR
+  protocol TCP
+
+  real_server <%= node['lvs_logging_db6_master_rip'] %> 3306 {
+    weight 1
+    inhibit_on_failure
+  }
+}
+<% end %>
+<% unless node['lvs_logging_db6_slave_vip'].empty? then %>
+
+virtual_server_group db6_slave {
+  <%= node['lvs_logging_db6_slave_vip'] %> 3306
+}
+
+virtual_server group db6_slave {
+  delay_loop  3
+  lvs_sched   lc
+  lvs_method  DR
+  protocol TCP
+
+<% node['lvs_logging_db6_slave_rip'].split(/\s*,\s*/).each do |rip| %>
+  real_server <%= rip %> 3306 {
+    weight 1
+    inhibit_on_failure
+
+    MISC_CHECK  {
+      misc_path     "/usr/lib64/nagios/plugins/check_mysql -H <%= rip %> -u root -p '<%= node['lvs_mysql_root_password'] %>' -S -w 30"
+      misc_timeout  3
+    }
+  }
+<% end %>
+}
+<% end %>
+<% end %>

@@ -1,0 +1,104 @@
+#!/bin/sh
+
+readonly LVS_SERVERS="<%= @lvs_rip.join(" ") %>"
+
+readonly STATE_OK=0
+readonly STATE_ERROR=1
+readonly STATE_SUCCESS=10
+
+oIFS="${IFS}"
+IFS="D${oIFS}="
+set -- $@
+
+function usage () {
+        echo "Usage: $0 --help"
+        echo "Usage: $0 --command=start|stop|stopssh|status" \                                   
+
+                  "--orig_master_port=port --new_master_host=host" \
+                  "--new_master_ip=ip --new_master_port=port"
+  echo ""
+}
+
+while test -n "$1"
+do
+  case "$1" in
+    --command)          COMMAND="$2";          shift ;;
+    --ssh_user)         SSH_USER="$2";         shift ;;
+    --orig_master_host) ORIG_MASTER_HOST="$2"; shift ;;
+    --orig_master_ip)   ORIG_MASTER_IP="$2";   shift ;;
+    --orig_master_port) ORIG_MASTER_PORT="$2"; shift ;;
+    --new_master_host)  NEW_MASTER_HOST="$2";  shift ;;
+    --new_master_ip)    NEW_MASTER_IP="$2";    shift ;;
+    --new_master_port)  NEW_MASTER_PORT="$2";  shift ;;
+
+    -h|--help)
+      usage
+      exit $STATE_ERROR
+      ;;
+
+    *)
+      echo "Unknown argument: $1"
+      usage
+      exit $STATE_ERROR
+      ;;
+  esac
+
+  shift
+done
+
+
+function checkconf() {
+  EXIT_STATUS=$STATE_OK
+
+  for LVS_SERVER in $LVS_SERVERS
+  do
+    echo "LVS_SERVER: $LVS_SERVER"
+    ssh $LVS_SERVER 'grep -v "#" /etc/keepalived/keepalived.conf \
+               | egrep "real_server[[:space:]]+'"$ORIG_MASTER_IP"'[[:space:]]"'
+
+    if [ $? -ne 0 ]; then
+      echo "error: can not find orig_master_ip=$ORIG_MASTER_IP"
+      echo "       in keepalived.conf at LVS_SERVER=$LVS_SERVER"
+      EXIT_STATUS=1
+    fi
+  done
+
+  exit $EXIT_STATUS
+}
+
+
+function rewriteconf() {
+  EXIT_STATUS=$STATE_SUCCESS
+
+  SUFFIX=".`date \"+%Y%m%d_%H%M%S\"`"
+
+  for LVS_SERVER in $LVS_SERVERS
+  do
+    echo "LVS_SERVER: $LVS_SERVER"
+    ssh $LVS_SERVER 'sed -i'"$SUFFIX"' "/real_server/s/'"$ORIG_MASTER_IP"'/'"$NEW_MASTER_IP"'/g" \
+                         /etc/keepalived/keepalived.conf; \
+                         /etc/init.d/keepalived restart'
+
+    if [ $? -ne 0 ]; then
+      echo "error: can not rewrite keepalived.conf"
+      EXIT_STATUS=1
+    fi
+  done
+
+  exit $EXIT_STATUS
+}
+
+case "$COMMAND" in
+  start)        rewriteconf ;;
+  stop|stopssh) ;; # nothing to do.
+  status)       checkconf  ;;
+
+  *)
+    echo "invalid command: $COMMAND"
+    usage
+    exit $STATE_ERROR
+    ;;
+esac
+
+exit $STATE_OK
+

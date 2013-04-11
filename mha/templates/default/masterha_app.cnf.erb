@@ -1,0 +1,20 @@
+<% number = 1 %>
+<% @db_slave_rip.each do |slave| %>
+[server<%=number%>]
+hostname=<%=slave%>
+candidate_master=1
+<% number += 1 %>
+
+<% end %>
+<% @db_bkup_rip.each do |bkup| %>
+[server<%=number%>]
+hostname=<%=bkup%>
+no_master=1
+<% number += 1 %>
+
+<% end %>
+<% @db_master_rip.each do |master| %>
+[server<%=number%>]
+hostname=<%=master%>
+<% number += 1 %>
+<% end %>

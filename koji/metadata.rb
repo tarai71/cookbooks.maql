@@ -1,0 +1,5 @@
+maintainer        "Xseed Co., Ltd."
+maintainer_email  "s-iwamoto@xseed.co.jp"
+license           "koji-1.7.0"
+description  "Configure RPM buildsystem"
+version           "0.1.0"

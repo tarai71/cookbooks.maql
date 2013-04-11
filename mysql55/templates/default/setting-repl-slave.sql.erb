@@ -1,0 +1,7 @@
+CHANGE MASTER TO
+master_host='<%= node['mysql55_server_master_rip'] %>',
+master_port=3306,
+master_user='repl',
+master_password='<%= node['mysql55_server_repl_password'] %>',
+master_log_file=<%= @master_log_file %>,
+master_log_pos=<%= @master_log_pos %>;

@@ -1,0 +1,75 @@
+[client]
+port = <%= node['mysql55_client_port'] %>
+socket = <%= node['mysql55_client_socket'] %>
+
+[mysqld]
+!includedir /etc/mysql.d
+<% require 'ipaddr' %>
+<% serverid = IPAddr.new(@my_ip.chomp).to_i %>
+<% serverid = rand(4294967295) if serverid.eql?(0) %>
+server-id = <%= serverid %>
+port = <%= node['mysql55_mysqld_port'] %>
+user = <%= node['mysql55_mysqld_user'] %>
+pid-file = <%= node['mysql55_mysqld_pid-file'] %>
+socket = <%= node['mysql55_mysqld_socket'] %>
+key_buffer_size = <%= node['mysql55_mysqld_key_buffer_size'] %>
+max_allowed_packet = <%= node['mysql55_mysqld_max_allowed_packet'] %>
+table_open_cache = <%= node['mysql55_mysqld_table_open_cache'] %>
+sort_buffer_size = <%= node['mysql55_mysqld_sort_buffer_size'] %>
+read_buffer_size = <%= node['mysql55_mysqld_read_buffer_size'] %>
+read_rnd_buffer_size = <%= node['mysql55_mysqld_read_rnd_buffer_size'] %>
+myisam_sort_buffer_size = <%= node['mysql55_mysqld_myisam_sort_buffer_size'] %>
+log-bin = <%= node['mysql55_mysqld_log-bin'] %>
+log-bin-index = <%= node['mysql55_mysqld_log-bin-index'] %>
+relay-log = <%= node['mysql55_mysqld_relay-log'] %>
+relay-log-index = <%= node['mysql55_mysqld_relay-log-index'] %>
+#<%= node['mysql55_mysqld_log_slave_updates'] %>
+#general_log = <%= node['mysql55_mysqld_general_log'] %>
+#general_log_file = <%= node['mysql55_mysqld_general_log_file'] %>
+log-error = <%= node['mysql55_mysqld_log-error'] %>
+binlog_format = <%= node['mysql55_mysqld_binlog_format'] %>
+max_binlog_size = <%= node['mysql55_mysqld_max_binlog_size'] %>
+expire_logs_days = <%= node['mysql55_mysqld_expire_logs_days'] %>
+long_query_time = <%= node['mysql55_mysqld_long_query_time'] %>
+thread_cache_size = <%= node['mysql55_mysqld_thread_cache_size'] %>
+thread_concurrency = <%= node['mysql55_mysqld_thread_concurrency'] %>
+query_cache_size = <%= node['mysql55_mysqld_query_cache_size'] %>
+#<%= node['mysql55_mysqld_innodb'] %>
+innodb_data_file_path = <%= node['mysql55_mysqld_innodb_data_file_path'] %>
+innodb_autoextend_increment = <%= node['mysql55_mysqld_innodb_autoextend_increment'] %>
+<%= node['mysql55_mysqld_innodb_file_per_table'] %>
+innodb_data_home_dir = <%= node['mysql55_mysqld_innodb_data_home_dir'] %>
+innodb_log_group_home_dir = <%= node['mysql55_mysqld_innodb_log_group_home_dir'] %>
+innodb_buffer_pool_size = <%= node['mysql55_mysqld_innodb_buffer_pool_size'] %>
+innodb_additional_mem_pool_size = <%= node['mysql55_mysqld_innodb_additional_mem_pool_size'] %>
+innodb_log_file_size = <%= node['mysql55_mysqld_innodb_log_file_size'] %>
+innodb_log_buffer_size = <%= node['mysql55_mysqld_innodb_log_buffer_size'] %>
+innodb_flush_log_at_trx_commit = <%= node['mysql55_mysqld_innodb_flush_log_at_trx_commit'] %>
+innodb_lock_wait_timeout = <%= node['mysql55_mysqld_innodb_lock_wait_timeout'] %>
+innodb_thread_concurrency = <%= node['mysql55_mysqld_innodb_thread_concurrency'] %>
+<%= node['mysql55_mysqld_skip-innodb-doublewrite'] %>
+max_connections = <%= node['mysql55_mysqld_max_connections'] %>
+max_connect_errors = <%= node['mysql55_mysqld_max_connect_errors'] %>
+character-set-server = <%= node['mysql55_mysqld_character-set-server'] %>
+<%= node['mysql55_mysqld_skip-character-set-client-handshake'] %>
+sync_binlog = <%= node['mysql55_mysqld_sync_binlog'] %>
+wait_timeout = <%= node['mysql55_mysqld_wait_timeout'] %>
+slow_query_log = <%= node['mysql55_mysqld_slow_query_log'] %>
+slow_query_log_file = <%= node['mysql55_mysqld_slow_query_log_file'] %>
+join_buffer_size = <%= node['mysql55_mysqld_join_buffer_size'] %>
+[mysqldump]
+<%= node['mysql55_mysqldump_quick'] %>
+max_allowed_packet = <%= node['mysql55_mysqldump_max_allowed_packet'] %>
+[mysql]
+<%= node['mysql55_mysql_no-auto-rehash'] %>
+default-character-set = <%= node['mysql55_mysql_default-character-set'] %>
+[myisamchk]
+key_buffer_size = <%= node['mysql55_myisamchk_key_buffer_size'] %>
+sort_buffer_size = <%= node['mysql55_myisamchk_sort_buffer_size'] %>
+read_buffer = <%= node['mysql55_myisamchk_read_buffer'] %>
+write_buffer = <%= node['mysql55_myisamchk_write_buffer'] %>
+[mysqlhotcopy]
+<%= node['mysql55_mysqlhotcopy_interactive-timeout'] %>
+[mysqld_safe]
+open-files-limit = <%= node['mysql55_mysqld_safe_open-files-limit'] %>
+

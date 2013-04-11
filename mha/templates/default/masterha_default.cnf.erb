@@ -1,0 +1,13 @@
+[server default]
+# mysql user and password
+user=mha
+password=<%= node['mha_mysql_mha_password'] %>
+#ssh_user=root
+# working directory on the manager
+manager_workdir=<%= node['mha_manager_workdir'] %>
+manager_log=<%= node['mha_manager_log'] %>
+# working directory on MySQL servers
+remote_workdir=<%= node['mha_remote_workdir'] %>
+master_binlog_dir = <%= node['mha_mysql_binlog_dir'] %>
+master_ip_failover_script=/usr/local/sbin/master_ip_failover.sh
+master_ip_online_change_script=/usr/local/sbin/master_ip_failover.sh

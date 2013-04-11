@@ -1,0 +1,53 @@
+[maql-release]
+name=CentOS-5.6 - $basearch
+baseurl=http://<%= node['yum-repo_maql_repository_hostname'] %>/maql-repo/el5-maql-release/$basearch/os/
+enabled=<%= node['yum-repo_maql-release_enable'] %>
+gpgcheck=0
+
+[maql-release-debug]
+name=CentOS-5.6 - $basearch - Debug
+baseurl=http://<%= node['yum-repo_maql_repository_hostname'] %>/maql-repo/el5-maql-release/$basearch/debug/
+enabled=<%= node['yum-repo_maql-release-debug_enable'] %>
+gpgcheck=0
+
+[maql-release-source]
+name=CentOS-5.6 - $basearch - Source
+baseurl=http://<%= node['yum-repo_maql_repository_hostname'] %>/maql-repo/el5-maql-release/source/SRPMS/
+enabled=<%= node['yum-repo_maql-release-source_enable'] %>
+gpgcheck=0
+
+[maql-testing]
+name=CentOS-5.6 - Testing - $basearch
+baseurl=http://<%= node['yum-repo_maql_repository_hostname'] %>/maql-repo/el5-maql-testing/$basearch/os/
+enabled=<%= node['yum-repo_maql-testing_enable'] %>
+gpgcheck=0
+
+[maql-testing-debug]
+name=CentOS-5.6 - Testing - $basearch - Debug
+baseurl=http://<%= node['yum-repo_maql_repository_hostname'] %>/maql-repo/el5-maql-testing/$basearch/debug/
+enabled=<%= node['yum-repo_maql-testing-debug_enable'] %>
+gpgcheck=0
+
+[maql-testing-source]
+name=CentOS-5.6 - Testing - $basearch - Source
+baseurl=http://<%= node['yum-repo_maql_repository_hostname'] %>/maql-repo/el5-maql-testing/source/SRPMS/
+enabled=<%= node['yum-repo_maql-testing-source_enable'] %>
+gpgcheck=0
+
+[maql-archive]
+name=CentOS-5.6 - Archive - $basearch
+baseurl=http://<%= node['yum-repo_maql_repository_hostname'] %>/maql-repo/el5-maql-archive/$basearch/os/
+enabled=<%= node['yum-repo_maql-archive_enable'] %>
+gpgcheck=0
+
+[maql-archive-debug]
+name=CentOS-5.6 - Archive - $basearch - Debug
+baseurl=http://<%= node['yum-repo_maql_repository_hostname'] %>/maql-repo/el5-maql-archive/$basearch/debug/
+enabled=<%= node['yum-repo_maql-archive-debug_enable'] %>
+gpgcheck=0
+
+[maql-archive-source]
+name=CentOS-5.6 - Archive - $basearch - Source
+baseurl=http://<%= node['yum-repo_maql_repository_hostname'] %>/maql-repo/el5-maql-archive/source/SRPMS/
+enabled=<%= node['yum-repo_maql-archive-source_enable'] %>
+gpgcheck=0

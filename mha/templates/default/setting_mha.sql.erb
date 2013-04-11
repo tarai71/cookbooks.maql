@@ -1,0 +1,5 @@
+GRANT ALL PRIVILEGES ON *.* TO 'mha'@'localhost' IDENTIFIED BY '<%= node['mha_mysql_mha_password'] %>';
+<% @db_lvs_all_rip.each do |i| %>
+GRANT ALL PRIVILEGES ON *.* TO 'mha'@'<%= i %>' IDENTIFIED BY '<%= node['mha_mysql_mha_password'] %>';
+<% end %>
+FLUSH PRIVILEGES;

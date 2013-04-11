@@ -1,0 +1,22 @@
+# Source descriptions
+## built-in TCP input
+<source>
+  type tcp
+  port <%= node['fluentd_td-agent_builtin_in_tcp_port'] %>
+</source>
+
+## HTTP input
+<source>
+  type http
+  port <%= node['fluentd_td-agent_plugin_in_http_port'] %>
+</source>
+
+# Match descriptions
+## Treasure Data output
+## match events whose tag is td.DATABASE.TABLE
+<match td.*.*>
+  type tdlog
+  apikey <%= node['fluentd_td-agent_builtin_out_tdlog_apikey'] %>
+  buffer_type file
+  buffer_path /var/log/td-agent/buffer/td
+</match>

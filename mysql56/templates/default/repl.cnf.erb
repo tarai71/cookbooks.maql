@@ -1,0 +1,7 @@
+[mysqld]
+read_only = <%= node['mysql56_mysqld_read_only'] %>
+rpl_semi_sync_master_enabled = <%= node['mysql56_mysqld_rpl_semi_sync_master_enabled'] %>
+rpl_semi_sync_master_timeout = <%= node['mysql56_mysqld_rpl_semi_sync_master_timeout'] %>
+rpl_semi_sync_slave_enabled = <%= node['mysql56_mysqld_rpl_semi_sync_slave_enabled'] %>
+slave_net_timeout = <%= node['mysql56_mysqld_slave_net_timeout'] %>
+slave_compressed_protocol = <%= node['mysql56_mysqld_slave_compressed_protocol'] %>

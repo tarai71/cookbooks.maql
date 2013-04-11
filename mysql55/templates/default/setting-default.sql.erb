@@ -1,0 +1,10 @@
+DELETE FROM mysql.user WHERE user = '';
+DELETE FROM mysql.user WHERE user = 'root';
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY '<%= node['mysql55_server_root_password'] %>' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON *.* TO 'appuser'@'localhost' IDENTIFIED BY '<%= node['mysql55_server_appuser_password'] %>' WITH GRANT OPTION;
+<% @node_ip.each do |ip| %>
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'<%= ip.gsub(/\.[0-9]+$/,".%")%>' IDENTIFIED BY '<%= node['mysql55_server_root_password'] %>' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON *.* TO 'appuser'@'<%= ip.gsub(/\.[0-9]+$/,".%")%>' IDENTIFIED BY '<%= node['mysql55_server_appuser_password'] %>' WITH GRANT OPTION;
+<% end %>
+FLUSH PRIVILEGES;
+DROP DATABASE IF EXISTS test;

@@ -1,0 +1,20 @@
+#!/bin/bash
+#if you change your certificate authority name to something else you will need to change the caname value to reflect the change.
+caname=<%= node['koji_certificate_caname'] %>
+
+# user is equal to parameter one or the first argument when you actually run the script
+user=$1
+
+openssl genrsa -out certs/${user}.key 2048
+cat ssl.cnf | sed 's/insert_hostname/'${user}'/'> ssl2.cnf
+
+openssl req -config ssl2.cnf -new -nodes -subj "/C=<%= node['koji_sslcnf_countryName_default'] %>/ST=<%= node['koji_sslcnf_stateOrProvinceName_default'] %>/L=<%= node['koji_sslcnf_localityName_default'] %>/O=<%= node['koji_sslcnf_0.organizationName_default'] %>/OU=<%= node['koji_sslcnf_organizationalUnitName_default'] %>/CN=${user}" -out certs/${user}.csr -key certs/${user}.key
+
+yes | openssl ca -config ssl2.cnf -keyfile private/${caname}_ca_cert.key -cert ${caname}_ca_cert.crt -out certs/${user}.crt -outdir certs -infiles certs/${user}.csr
+
+cat certs/${user}.crt certs/${user}.key > ${user}.pem
+
+mv ssl2.cnf confs/${user}-ssl.cnf
+
+# user certificates
+openssl pkcs12 -export -inkey /etc/pki/koji/certs/${user}.key -in /etc/pki/koji/certs/${user}.crt -CAfile /etc/pki/koji/${caname}_ca_cert.crt -out /etc/pki/koji/certs/${user}_browser_cert.p12 -passout pass:

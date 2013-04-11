@@ -1,0 +1,44 @@
+[kojira]
+; For user/pass authentication
+; user=kojira
+; password=kojira
+
+; For Kerberos authentication
+; the principal to connect with
+;principal=koji/repo@EXAMPLE.COM
+; The location of the keytab for the principal above
+;keytab=/etc/kojira.keytab
+
+; The URL for the koji hub server
+server=<%= node['koji_kojira.conf_server'] %>
+
+; The directory containing the repos/ directory
+topdir=<%= node['koji_kojira.conf_topdir'] %>
+
+; Logfile
+logfile=<%= node['koji_kojira.conf_logfile'] %>
+
+; Include srpms in repos? (not needed for normal operation)
+with_src=<%= node['koji_kojira.conf_with_src'] %>
+
+;configuration for Kerberos authentication
+
+;the kerberos principal to use
+;principal = kojira@EXAMPLE.COM
+
+;location of the keytab
+;keytab = /etc/kojira/kojira.keytab
+
+;the service name of the principal being used by the hub
+;krbservice = host
+
+;configuration for SSL authentication
+
+;client certificate
+cert = <%= node['koji_kojira.conf_cert'] %>
+
+;certificate of the CA that issued the client certificate
+ca = <%= node['koji_kojira.conf_ca'] %>
+
+;certificate of the CA that issued the HTTP server certificate
+serverca = <%= node['koji_kojira.conf_serverca'] %>

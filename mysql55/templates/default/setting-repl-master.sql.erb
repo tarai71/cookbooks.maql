@@ -1,0 +1,5 @@
+GRANT REPLICATION SLAVE ON *.* TO 'repl'@'localhost' IDENTIFIED BY '<%= node['mysql55_server_repl_password'] %>';
+<% @all_ip.each do |i| %>
+GRANT REPLICATION SLAVE ON *.* TO 'repl'@'<%= i %>' IDENTIFIED BY '<%= node['mysql55_server_repl_password'] %>';
+<% end %>
+FLUSH PRIVILEGES;

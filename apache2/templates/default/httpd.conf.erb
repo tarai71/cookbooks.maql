@@ -1,0 +1,260 @@
+ServerTokens <%= node['apache2_ServerTokens'] %>
+ServerRoot <%= node['apache2_ServerRoot'] %>
+PidFile <%= node['apache2_PidFile'] %>
+Timeout <%= node['apache2_Timeout'] %>
+KeepAlive <%= node['apache2_KeepAlive'] %>
+MaxKeepAliveRequests <%= node['apache2_MaxKeepAliveRequests'] %>
+KeepAliveTimeout <%= node['apache2_KeepAliveTimeout'] %>
+<IfModule prefork_c>
+StartServers       <%= node['apache2_prefork_c_StartServers'] %>
+MinSpareServers    <%= node['apache2_prefork_c_MinSpareServers'] %>
+MaxSpareServers   <%= node['apache2_prefork_c_MaxSpareServers'] %>
+ServerLimit      <%= node['apache2_prefork_c_ServerLimit'] %>
+MaxClients       <%= node['apache2_prefork_c_MaxClients'] %>
+MaxRequestsPerChild  <%= node['apache2_prefork_c_MaxRequestsPerChild'] %>
+</IfModule>
+
+<IfModule worker_c>
+StartServers         <%= node['apache2_worker_c_StartServers'] %>
+MaxClients         <%= node['apache2_worker_c_MaxClients'] %>
+MinSpareThreads     <%= node['apache2_worker_c_MinSpareThreads'] %>
+MaxSpareThreads     <%= node['apache2_worker_c_MaxSpareThreads'] %>
+ThreadsPerChild     <%= node['apache2_worker_c_ThreadsPerChild'] %>
+MaxRequestsPerChild  <%= node['apache2_worker_c_MaxRequestsPerChild'] %>
+</IfModule>
+
+Listen <%= node['apache2_Listen'] %>
+
+<% node['apache2_LoadModule'].each do |mod| next if mod == "ssl" -%>
+LoadModule <%= mod %>_module modules/mod_<%= mod %>.so
+<% end -%>
+
+Include <%= node['apache2_Include'] %>
+
+#ExtendedStatus On
+
+User <%= node['apache2_User'] %>
+Group <%= node['apache2_Group'] %>
+
+#ServerAdmin <%= node['apache2_ServerAdmin'] %>
+ServerName <%= node['apache2_ServerName'] %>
+
+UseCanonicalName <%= node['apache2_UseCanonicalName'] %>
+
+DocumentRoot "<%= node['apache2_DocumentRoot'] %>"
+
+<Directory />
+    Options <%= node['apache2_Directory_root_Options'] %>
+    AllowOverride <%= node['apache2_Directory_root_AllowOverride'] %>
+</Directory>
+
+<Directory <%= node['apache2_DocumentRoot'] %>>
+    Options <%= node['apache2_Directory_html_Options'] %>
+    AllowOverride <%= node['apache2_Directory_html_AllowOverride'] %>
+    Order <%= node['apache2_Directory_html_Order'] %>
+    Allow from <%= node['apache2_Directory_html_Allow_from'] %>
+</Directory>
+
+#<IfModule mod_userdir_c>
+#    UserDir <%= node['apache2_IfModule_mod_userdir_c_UserDir'] %>
+#    #UserDir public_html
+#</IfModule>
+#<Directory /home/*/public_html>
+#    AllowOverride FileInfo AuthConfig Limit
+#    Options MultiViews Indexes SymLinksIfOwnerMatch IncludesNoExec
+#    <Limit GET POST OPTIONS>
+#        Order allow,deny
+#        Allow from all
+#    </Limit>
+#    <LimitExcept GET POST OPTIONS>
+#        Order deny,allow
+#        Deny from all
+#    </LimitExcept>
+#</Directory>
+
+DirectoryIndex <%= node['apache2_DirectoryIndex'] %>
+
+AccessFileName <%= node['apache2_AccessFileName'] %>
+
+<Files ~ "^\.ht">
+    Order <%= node['apache2_Files_ht_Order'] %>
+    Deny from <%= node['apache2_Files_ht_Deny_from'] %>
+    Satisfy <%= node['apache2_Files_ht_Satisfy'] %>
+</Files>
+
+TypesConfig <%= node['apache2_TypesConfig'] %>
+
+DefaultType <%= node['apache2_DefaultType'] %>
+
+<IfModule mod_mime_magic.c>
+#   MIMEMagicFile /usr/share/magic.mime
+    MIMEMagicFile <%= node['apache2_IfModule_mod_mime_magic_c_MIMEMagicFile'] %>
+</IfModule>
+
+HostnameLookups <%= node['apache2_HostnameLookups'] %>
+
+#EnableMMAP off
+#EnableSendfile off
+
+ErrorLog <%= node['apache2_ErrorLog'] %>
+LogLevel <%= node['apache2_LogLevel'] %>
+
+LogFormat <%= node['apache2_LogFormat_combined'] %> combined
+LogFormat <%= node['apache2_LogFormat_common'] %> common
+LogFormat <%= node['apache2_LogFormat_referer'] %> referer
+LogFormat <%= node['apache2_LogFormat_agent'] %> agent
+#LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %I %O" combinedio
+#CustomLog logs/access_log common
+#CustomLog logs/referer_log referer
+#CustomLog logs/agent_log agent
+CustomLog <%= node['apache2_CustomLog_combined'] %> combined
+
+ServerSignature <%= node['apache2_ServerSignature'] %>
+
+Alias <%= node['apache2_Alias_icons'] %> "<%= node['apache2_icons_dir'] %>"
+
+<Directory "<%= node['apache2_icons_dir'] %>">
+    Options <%= node['apache2_Directory_icons_Options'] %>
+    AllowOverride <%= node['apache2_Directory_icons_AllowOverride'] %>
+    Order <%= node['apache2_Directory_icons_Order'] %>
+    Allow from <%= node['apache2_Directory_icons_Allow_from'] %>
+</Directory>
+
+#<IfModule mod_dav_fs.c>
+#    # Location of the WebDAV lock database.
+#    DAVLockDB <%= node['apache2_IfModule_mod_dav_fs_c_DAVLockDB'] %>
+#</IfModule>
+
+#ScriptAlias <%= node['apache2_ScriptAlias'] %>
+
+#<Directory "/var/www/cgi-bin">
+#    AllowOverride <%= node['apache2_Directory_cgi-bin_AllowOverride'] %>
+#    Options <%= node['apache2_Directory_cgi-bin_Options'] %>
+#    Order <%= node['apache2_Directory_cgi-bin_Order'] %>
+#    Allow from <%= node['apache2_Directory_cgi-bin_Allow.from'] %>
+#</Directory>
+
+IndexOptions <%= node['apache2_IndexOptions'] %>
+
+AddIconByEncoding <%= node['apache2_AddIconByEncoding'] %>
+
+<% node['apache2_AddIconByType'].each do |addiconbytype| -%>
+AddIconByType <%= addiconbytype %>
+<% end -%>
+
+<% node['apache2_AddIcon'].each do |addicon| -%>
+AddIcon <%= addicon %>
+<% end -%>
+
+DefaultIcon <%= node['apache2_DefaultIcon'] %>
+
+#AddDescription "GZIP compressed document" .gz
+#AddDescription "tar archive" .tar
+#AddDescription "GZIP compressed tar archive" .tgz
+
+ReadmeName <%= node['apache2_ReadmeName'] %>
+HeaderName <%= node['apache2_HeaderName'] %>
+
+IndexIgnore <%= node['apache2_IndexIgnore'] %>
+
+<% node['apache2_AddLanguage'].each do |addlang| -%>
+AddLanguage <%= addlang %>
+<% end -%>
+
+LanguagePriority <%= node['apache2_LanguagePriority'].join(" ") %>
+
+ForceLanguagePriority <%= node['apache2_ForceLanguagePriority'] %>
+
+AddDefaultCharset <%= node['apache2_AddDefaultCharset'] %>
+
+#AddType application/x-tar .tgz
+<% node['apache2_AddType'].each do |addtype| -%>
+AddType <%= addtype %>
+<% end -%>
+
+#AddEncoding x-compress .Z
+#AddEncoding x-gzip .gz .tgz
+
+#AddHandler cgi-script .cgi
+
+#AddHandler send-as-is asis
+
+AddHandler <%= node['apache2_AddHandler'] %>
+
+AddOutputFilter <%= node['apache2_AddOutputFilter'] %>
+
+#ErrorDocument 500 "The server made a boo boo."
+#ErrorDocument 404 /missing.html
+#ErrorDocument 404 "/cgi-bin/missing_handler.pl"
+#ErrorDocument 402 http://www.example.com/subscription_info.html
+
+Alias <%= node['apache2_Alias_error'] %>
+
+<IfModule mod_negotiation.c>
+<IfModule mod_include.c>
+    <Directory "/var/www/error">
+        AllowOverride <%= node['apache2_Directory_error_AllowOverride'] %>
+        Options <%= node['apache2_Directory_error_Options'] %>
+        AddOutputFilter <%= node['apache2_Directory_error_AddOutputFilter'] %>
+        AddHandler <%= node['apache2_Directory_error_AddHandler'] %>
+        Order <%= node['apache2_Directory_error_Order'] %>
+        Allow from <%= node['apache2_Directory_error_Allow_from'] %>
+        LanguagePriority <%= node['apache2_Directory_error_LanguagePriority'] %>
+        ForceLanguagePriority <%= node['apache2_Directory_error_ForceLanguagePriority'] %>
+    </Directory>
+
+#    ErrorDocument 400 /error/HTTP_BAD_REQUEST.html.var
+#    ErrorDocument 401 /error/HTTP_UNAUTHORIZED.html.var
+#    ErrorDocument 403 /error/HTTP_FORBIDDEN.html.var
+#    ErrorDocument 404 /error/HTTP_NOT_FOUND.html.var
+#    ErrorDocument 405 /error/HTTP_METHOD_NOT_ALLOWED.html.var
+#    ErrorDocument 408 /error/HTTP_REQUEST_TIME_OUT.html.var
+#    ErrorDocument 410 /error/HTTP_GONE.html.var
+#    ErrorDocument 411 /error/HTTP_LENGTH_REQUIRED.html.var
+#    ErrorDocument 412 /error/HTTP_PRECONDITION_FAILED.html.var
+#    ErrorDocument 413 /error/HTTP_REQUEST_ENTITY_TOO_LARGE.html.var
+#    ErrorDocument 414 /error/HTTP_REQUEST_URI_TOO_LARGE.html.var
+#    ErrorDocument 415 /error/HTTP_UNSUPPORTED_MEDIA_TYPE.html.var
+#    ErrorDocument 500 /error/HTTP_INTERNAL_SERVER_ERROR.html.var
+#    ErrorDocument 501 /error/HTTP_NOT_IMPLEMENTED.html.var
+#    ErrorDocument 502 /error/HTTP_BAD_GATEWAY.html.var
+#    ErrorDocument 503 /error/HTTP_SERVICE_UNAVAILABLE.html.var
+#    ErrorDocument 506 /error/HTTP_VARIANT_ALSO_VARIES.html.var
+
+</IfModule>
+</IfModule>
+
+<% node['apache2_BrowserMatch'].each do |browsermatch| -%>
+BrowserMatch <%= browsermatch %>
+<% end -%>
+
+#<Location /server-status>
+#    SetHandler server-status
+#    Order deny,allow
+#    Deny from all
+#    Allow from .example.com
+#</Location>
+
+#<Location /server-info>
+#    SetHandler server-info
+#    Order deny,allow
+#    Deny from all
+#    Allow from .example.com
+#</Location>
+
+#<IfModule mod_proxy.c>
+#ProxyRequests On
+#
+#<Proxy *>
+#    Order deny,allow
+#    Deny from all
+#    Allow from .example.com
+#</Proxy>
+
+#ProxyVia On
+
+#<IfModule mod_disk_cache.c>
+#   CacheEnable disk /
+#   CacheRoot "/var/cache/mod_proxy"
+#</IfModule>
+#</IfModule>

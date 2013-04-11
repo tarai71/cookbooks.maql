@@ -1,0 +1,11 @@
+/var/log/kojid.log {
+    daily
+    rotate 10
+    compress
+    missingok
+    notifempty
+    sharedscripts
+    postrotate
+        /etc/init.d/kojid reload > /dev/null 2>&1 || true
+    endscript
+}

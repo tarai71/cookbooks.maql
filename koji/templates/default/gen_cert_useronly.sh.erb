@@ -1,0 +1,9 @@
+#!/bin/bash
+#if you change your certificate authority name to something else you will need to change the caname value to reflect the change.
+caname=<%= node['koji_certificate_caname'] %>
+
+# user is equal to parameter one or the first argument when you actually run the script
+user=$1
+
+# user certificates
+openssl pkcs12 -export -inkey /etc/pki/koji/certs/${user}.key -in /etc/pki/koji/certs/${user}.crt -CAfile /etc/pki/koji/${caname}_ca_cert.crt -out /etc/pki/koji/certs/${user}_browser_cert.p12 -passout pass:
